@@ -21,15 +21,10 @@ public class MvcSecurityFilter implements javax.servlet.Filter {
         IronUser usr = (IronUser) req.getSession().getAttribute("user");
         boolean authorized = (usr != null);
 
-        // check destination
-        if(!authorized){
-            authorized =  req.getRequestURI().contains("login");
-        }
-
         if(authorized) {
             chain.doFilter(request, response);
         }else{
-            resp.sendRedirect("/mvc/login.jsp");
+            resp.sendRedirect("/mvc/open/login.jsp");
         }
     }
 

@@ -79,9 +79,39 @@ public class IronUserRepositoryTest {
         IronUser tstUser = new IronUser("skipper", "pass", "Jason Skipper");
         userRepo.save(tstUser);
 
-       // movie should
+       // find by user pass
         IronUser found = userRepo.findByUsernameAndPassword("skipper", "pass");
         Assert.assertNotNull(found);
+    }
+
+    @Test
+    public void testRemoveMovieFromUserFav() throws Exception{
+        Movie savedMovie = movieRepo.save(new Movie("Matrix", "R", "http://url", "Awesome Movie", 209));
+
+
+        // create user
+        IronUser tstUser = new IronUser("skipper", "pass", "Jason Skipper");
+        tstUser.setFavs(new HashSet());
+        tstUser.getFavs().add(savedMovie);
+        userRepo.save(tstUser);
+
+        // confirm all relationships
+        IronUser fetchedUser = userRepo.findOne(tstUser.getId());
+        Assert.assertTrue(!fetchedUser.getFavs().isEmpty());
+
+
+        for(Movie fav: fetchedUser.getFavs()){
+            if(fav.getId() == savedMovie.getId()){
+                fetchedUser.getFavs().remove(fav);
+            }
+        }
+        userRepo.save(fetchedUser);
+
+        // movie should
+        fetchedUser = userRepo.findOne(tstUser.getId());
+
+        Assert.assertTrue(fetchedUser.getFavs().isEmpty());
+
     }
 
 }

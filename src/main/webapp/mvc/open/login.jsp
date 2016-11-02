@@ -8,7 +8,7 @@
 <div>
     <c:out value="${message}"/>
 </div>
-<form action="/mvc/login" method="post">
+<form action="/mvc/open/login" method="post">
     <div>
         User: <input type="text" name="username"/>
     </div>

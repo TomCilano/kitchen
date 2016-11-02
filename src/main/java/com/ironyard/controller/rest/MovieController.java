@@ -22,7 +22,6 @@ public class MovieController {
     @Autowired
     private MovieRepository movieRepository;
 
-
     /**
      * Save the provided movie
      */

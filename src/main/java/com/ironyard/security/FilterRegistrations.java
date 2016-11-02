@@ -24,7 +24,7 @@ public class FilterRegistrations {
     @Bean
     public FilterRegistrationBean mvcSecutiryFilter() {
         FilterRegistrationBean registration = new FilterRegistrationBean(new MvcSecurityFilter());
-        registration.addUrlPatterns("/mvc/*");
+        registration.addUrlPatterns("/mvc/secure/*");
         return registration;
     }
 }

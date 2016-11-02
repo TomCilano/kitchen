@@ -3,6 +3,7 @@ package com.ironyard.controller.mvc;
 import com.ironyard.data.IronUser;
 import com.ironyard.data.Movie;
 import com.ironyard.repo.IronUserRepository;
+import com.ironyard.repo.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
@@ -18,13 +19,16 @@ import java.util.Set;
  * Created by jasonskipper on 11/1/16.
  */
 @Controller
-@RequestMapping(path = "/mvc/movie")
+@RequestMapping(path = "/mvc/secure/movie")
 public class MvcMovieController {
 
     @Autowired
     IronUserRepository userRepository = null;
 
-    @RequestMapping(value = "home", method = RequestMethod.GET)
+    @Autowired
+    MovieRepository movieRepository = null;
+
+    @RequestMapping(value = "favs", method = RequestMethod.GET)
     public String home(Model model, HttpServletRequest request){
         // get current logged in user, need to case (IronUser) to proper type
         IronUser user = (IronUser)request.getSession().getAttribute("user");
@@ -38,8 +42,23 @@ public class MvcMovieController {
         // put them in a model
         model.addAttribute("favs", favs);
 
-        // send them to the dam
-        return "home";
+        // send them to the home page
+        return "/secure/home";
     }
 
+    @RequestMapping(value = "all", method = RequestMethod.GET)
+    public String allMovies(Model model, HttpServletRequest request){
+        // get current logged in user, need to case (IronUser) to proper type
+
+
+        // get users favorites
+        Iterable<Movie> allMovies = movieRepository.findAll();
+
+
+        // put them in a model
+        model.addAttribute("all_movies", allMovies);
+
+        // send them to the home page
+        return "/secure/list_all_movies";
+    }
 }

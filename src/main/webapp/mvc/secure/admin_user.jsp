@@ -6,6 +6,13 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page isELIgnored="false" %>
+<%
+    response.setHeader("Cache-Control","no-store, must-revalidate");
+    response.setHeader("Pragma","no-cache");
+    response.setDateHeader ("Expires", 0);
+%>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -48,45 +55,57 @@
     <div class="header clearfix">
         <nav>
             <ul class="nav nav-pills pull-right">
-                <li role="presentation" class="active"><a href="/mvc/home">Home</a></li>
-                <li role="presentation"><a href="/mnv/movies">Movies</a></li>
-                <li role="presentation"><a href="/mvc/users">Users</a></li>
-                <li role="presentation"><a href="/mvc/logout">Logout</a></li>
+                <li role="presentation"><a href="/mvc/secure/movie/favs">Home</a></li>
+                <li role="presentation"><a href="/mvc/secure/movie/all">Movies</a></li>
+                <li role="presentation" class="active"><a href="/mvc/secure/users">Users</a></li>
+                <li role="presentation"><a href="/mvc/open/logout">Logout</a></li>
             </ul>
         </nav>
-        <h3 class="text-muted">Movie Favs</h3>
+        <h3 class="text-muted">User Administration</h3>
     </div>
 
 
 
     <div class="row marketing">
         <div class="col-lg-6">
-            <h4>Here's your list of Favorite Movies</h4>
+            <h4>Save User</h4>
+            <c:if test="${error_message != null}">
+                <div class="alert alert-danger"><c:out value="${error_message}"/></div>
+            </c:if>
+
+            <form method="post" action="/mvc/secure/admin/user/create">
+                <table class="table">
+                    <tr><td>Display Name:</td><td><input type="text" name="displayname" value="<c:out value="${displayname}"/>"></td></tr>
+                    <tr><td>Login Name:</td><td><input type="text" name="username" value="<c:out value="${username}"/>"></td></tr>
+                    <tr><td>Password:</td><td><input type="password" name="password"></td></tr>
+                    <tr><td>Password (Repeat):</td><td><input type="password" name="password2"></td></tr>
+                </table>
+                <div>
+                    <input type="submit" name="Save"/>
+                </div>
+            </form>
+            <p></p>
+            <h4>All System Users</h4>
 
             <p/>
 
             <table class="table">
                 <thead>
                 <tr>
-                    <th>Title</th>
-                    <th>Rating</th>
-                    <th>Description</th>
-                    <th>Length (mins)</th>
+                    <th>Action</th>
+                    <th>Username</th>
+                    <th>DisplayName</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>The Matrix</td>
-                    <td>R</td>
-                    <td>Way cool Sci-Fi movies.</td>
-                    <td>210</td>
-                </tr>
-                <tr>
-                    <td>The Breakup</td>
-                    <td>PG</td>
-                    <td>Not Way cool Sci-Fi movies.</td>
-                    <td>99</td>
-                </tr>
+
+                <c:forEach items="${users}" var="aUser">
+                    <tr>
+                        <td><a href="/mvc/secure/admin/user/delete?id=<c:out value="${aMovie.id}"/>">Delete User</a></td>
+                        <td><c:out value="${aUser.username}"/></td>
+                        <td><c:out value="${aUser.displayName}"/></td>
+                    </tr>
+                </c:forEach>
                 </tbody>
             </table>
 
